@@ -2,7 +2,7 @@
 
 Minimalistic HTML5/ES6 terminal for multiplayer top-down pixel art games.
 
-[Live demo](brotherdetjr-time.firebaseapp.com). Sprites are taken from [here](https://wrlck.itch.io/simple-desert) and [here](https://wildrandomness23.deviantart.com/art/PSVX-4G-Charset3-214615699). Thanks to the authors.
+[Live demo](https://brotherdetjr-time.firebaseapp.com). Sprites are taken from [here](https://wrlck.itch.io/simple-desert) and [here](https://wildrandomness23.deviantart.com/art/PSVX-4G-Charset3-214615699). Thanks to the authors.
 
 ## WTF is top-down pixel art?
 

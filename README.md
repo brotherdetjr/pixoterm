@@ -20,7 +20,13 @@ On the opposite end you have [MUD](https://en.wikipedia.org/wiki/Text-based_game
 
 The data appear more important here. What pixoterm does is just taking the data from server and visualizing it according to simple rules and preloaded sprites.
 
-## Quick Start
+## Tutorial
+
+Complete tutorial project can be found [at GitHub](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/).
+
+### Step 1
+
+The live demo of Step 1 can be found [here](https://brotherdetjr-time.firebaseapp.com/tutorial01.html).
 
 ```javascript
 import pixoterm from './pixoterm.js' // (1)
@@ -40,8 +46,6 @@ pixoterm(
     $.getJSON('tutorial01.json', (map) => term.render(map)); // (9)
 });
 ```
-
-> Complete tutorial project can be found [at GitHub](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/tutorial01.js) and [here](https://brotherdetjr-time.firebaseapp.com/tutorial01.html) as live demo. 
 
 - First me need to import pixoterm.js **(1)**. The module gives you *pixoterm* function, you need to pass some args to it.
 - Your game screen will be the grid of given dimensions **(2a,b)**.
@@ -100,8 +104,46 @@ This is an object, which keys are the names of the sprites. "*sand_0*" value is 
 
 - *frames* contains an array of sprite names from texture pack ([sprites.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/sprites.json) in our case). Yes, we have double indirection here. Since this piece of ground is not animated, the array contains single element.
 - *zIndex* determines an order in which sprites of a given cell will be drawn. Sprites with bigger zIndex are drawn atop the sprites with lesser one.
-- "*bant_idle_down*" has some animation, see "*frames*" array, but nothing would be moving, unless we added "*animate*" transition to "*transitions*" array. "*sequence*" specifies the sequence of frames in animation. Every number refers to element in "*frames*" array. Yes, we have triple indirection here.
+- "*bant_idle_down*" has some animation, see "*frames*" array, but nothing would be moving, unless we added "*animate*" transition to "*transitions*" array. "*sequence*" specifies the sequence of frames in animation. Every number refers to element in "*frames*" array.
 - If "*loopFrom*" property is specified, the animation is looped starting with *loopFrom*th frame of "*sequence*". Here we have looped 8x2 frames of breathing. We don't want our little girl to suffocate.
+
+## Step 2: Filters and More on Transitions
+
+Let's make the girl look left. Just change "*bant_idle_down*" to "*bant_idle_left*" in map JSON.
+
+But if you look at [sprites.png](https://brotherdetjr-time.firebaseapp.com/sprites.png), you won't find there a girl looking left. In [composition.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/composition.json) we applied a flip filter to the sprite:
+
+```json
+"bant_idle_left": {
+...
+        "filters": [{"name": "flip", "params": 1}]
+    },
+```
+
+"params" can have one of four values:
+
+- 0 &mdash; no flip
+- 1 &mdash; flip horizontally
+- 2 &mdash; flip vertically
+- 3 &mdash; flip both horizontally and vertically
+
+Now let's make her walking. Change "*bant_idle_left*" to "*bant_walk_left*". Hey, she stirs her legs, but stays in the same place! Probably we should use "*bant_walk_left_and_move*" sprite, but we don't have it in [composition.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/composition.json).
+
+Why to have a sprite that stirs the legs, but stays fixed? This is for you protagonist character, which normally stays in the center of the screen. Ok, but where is "*bant_walk_left_and_move*"? You may add it, if you like, but it's not necessary, because you can simply add "*move*" transition to the map:
+
+```json
+{"sprite": "bant_walk_left", "transitions": [{"name": "move", "params": {"direction": "left", "distancePx": 32, "stepPx": 2}}]}
+```
+
+It has the following params:
+
+- direction &mdash; left, right, up, or down.
+- distancePx &mdash; the distance in pixels to move to.
+- stepPx &mdash; the distance in pixels a sprite will move to every frame.
+
+In [the given example](https://brotherdetjr-time.firebaseapp.com/tutorial02.html) the girl will move to the left for 32 px in 16 two-pixel steps. Since the frame rate in the example is set to the default value of 12 FPS, the girl will move to the left cell in 16/12 = 1,333 seconds. Right to the cactus, ouch!
+
+In addition, you can apply filters not only to sprites in composition JSON, but also to sprites in a map, the same way as we did it for transitions.
 
 ## A Word on Data
 
@@ -112,4 +154,3 @@ Also it worth using some binary formats instead of JSON ([here](http://bsonspec.
 When implementing your own pixoterm (de)serialization, you might be tempted to send not the whole screen data, but delta &mdash; the changes appeared since the previous frame. Potentially this is much more efficient.
 
 However I suggest to avoid such approach, because dealing with deltas assumes, that your client application keeps some state. It might be quite tricky to maintain the state correctly on a client. Keep your client app stateless as much as you can.
-

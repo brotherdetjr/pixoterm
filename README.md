@@ -55,3 +55,14 @@ pixoterm(
 
 > I use [ES6 syntax](http://es6-features.org), which does not work in some browsers (e.g. in Firefox you need to switch ES6 support on manually). I don't care. I might convert it to older JS later, but I'm sure, they will support ES6 soon.
 
+What map JSON looks like?
+
+```json
+[
+    [[{"sprite": "sand_0"}, {"sprite": "stone_single"}], [...], ...],
+    [[{"sprite": "sand_2"}, {"sprite": "cactus_tall"}], [...], ...],
+    [[{"sprite": "sand_0"}, {"sprite": "cactus_round"}], [...], ...]
+]
+```
+
+The real map JSON can be seen [here](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/tutorial01.json). The map is JSON array of arrays of arrays of some objects. Tricky, isn't it?

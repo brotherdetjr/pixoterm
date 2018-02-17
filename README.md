@@ -65,4 +65,51 @@ What map JSON looks like?
 ]
 ```
 
-The real map JSON can be seen [here](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/tutorial01.json). The map is JSON array of arrays of arrays of some objects. Tricky, isn't it?
+The real map JSON can be seen [here](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/tutorial01.json).
+
+The map is JSON array of arrays of arrays of some objects. Tricky, isn't it? What did you expect? Two dimensions go for your 2D map. Every cell of your map can contain a number of objects, that's why we have one more dimension.
+
+Every object in the map contains *sprite* property, which references to a sprite description in sprite composition JSON ([composition.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/composition.json) in our case). You see "*sand_...*" sprites which are obviously pictures of ground and different items on it: *cactus_tall*, *cactus_round*, *stone_single*...
+
+You might even notice that some sprite (*bant_idle_down*) is animated &mdash; it's a girl with a red bow standing still, but breathing heavily like a typical pixel art character.
+
+Let's take a look at [composition.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/composition.json):
+
+```json
+{
+"sand_0": {"frames": ["sand_0.png"], "zIndex": 0},
+...
+"bant_idle_down": {
+    "frames": ["bant_walk_down_1.png", "bant_walk_down_3.png"],
+    "zIndex": 100,
+    "transitions": [
+        {
+            "name": "animate",
+            "params": {
+                "sequence": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+                "loopFrom": 0
+            }
+        }
+    ]
+}
+...
+}
+```
+
+This is an object, which keys are the names of the sprites. "*sand_0*" value is quite simple:
+
+- *frames* contains an array of sprite names from texture pack ([sprites.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/sprites.json) in our case). Yes, we have double indirection here. Since this piece of ground is not animated, the array contains single element.
+- *zIndex* determines an order in which sprites of a given cell will be drawn. Sprites with bigger zIndex are drawn atop the sprites with lesser one.
+- "*bant_idle_down*" has some animation, see "*frames*" array, but nothing would be moving, unless we added "*animate*" transition to "*transitions*" array. "*sequence*" specifies the sequence of frames in animation. Every number refers to element in "*frames*" array. Yes, we have triple indirection here.
+- If "*loopFrom*" property is specified, the animation is looped starting with *loopFrom*th frame of "*sequence*". Here we have looped 8x2 frames of breathing. We don't want our little girl to suffocate.
+
+## A Word on Data
+
+You could notice that all the data structures are pretty redundant. Yes, they are, but this is done for simplicity of pixoterm engine. If you are concerned with minimization of networking traffic, you should use some optimizers that will normalize the data before sending to a browser, and denormalize it at browser's side when passing to pixoterm.
+
+Also it worth using some binary formats instead of JSON ([here](http://bsonspec.org/) and [here](https://github.com/google/protobuf/tree/master/js)), but this is out of pixoterm's scope.
+
+When implementing your own pixoterm (de)serialization, you might be tempted to send not the whole screen data, but delta &mdash; the changes appeared since the previous frame. Potentially this is much more efficient.
+
+However I suggest to avoid such approach, because dealing with deltas assumes, that your client application keeps some state. It might be quite tricky to maintain the state correctly on a client. Keep your client app stateless as much as you can.
+

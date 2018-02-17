@@ -41,7 +41,7 @@ pixoterm(
 });
 ```
 
-> Complete tutorial project can be found on GitHub (TODO) and here (TODO) as live demo. 
+> Complete tutorial project can be found [at GitHub](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/tutorial01.js) and [here](https://brotherdetjr-time.firebaseapp.com/tutorial01.html) as live demo. 
 
 - First me need to import pixoterm.js **(1)**. The module gives you *pixoterm* function, you need to pass some args to it.
 - Your game screen will be the grid of given dimensions **(2a,b)**.
@@ -53,5 +53,5 @@ pixoterm(
 - When resolved, it contains an object, which has *view* property **(8)** &mdash; an instance of [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement), which you need to add to you HTML page.
 - Also it has *render* method **(9)**, which you call passing an instance of map to render.
 
-> I use ES6 syntax, which does not work in some browsers (e.g. in Firefox you need to switch ES6 support on manually). I don't care. I might convert it to older JS later, but I'm sure, they will support ES6 soon.
+> I use [ES6 syntax](http://es6-features.org), which does not work in some browsers (e.g. in Firefox you need to switch ES6 support on manually). I don't care. I might convert it to older JS later, but I'm sure, they will support ES6 soon.
 

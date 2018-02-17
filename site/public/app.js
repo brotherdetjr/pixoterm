@@ -2,14 +2,8 @@ import pixoterm from './pixoterm.js'
 
 pixoterm(
     {
-        spriteWidthPx: 32,
-        spriteHeightPx: 32,
         screenWidthInSprites: 3,
         screenHeightInSprites: 3,
-        scale: 2,
-        animationFps: 12,
-        backgroundColor: '0x1099bb',
-        outerInSprites: 1,
         spritePack: 'sprites.json',
         spriteComposition: 'composition.json'
     },

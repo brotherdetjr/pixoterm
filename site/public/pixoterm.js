@@ -43,6 +43,17 @@ const renderSprite = (entryWithCoords, sp, config, transitionStates, textures) =
     return sprite;
 };
 
+export const configDefaults = {
+    spriteWidthPx: 32,
+    spriteHeightPx: 32,
+    screenWidthInSprites: 5,
+    screenHeightInSprites: 5,
+    scale: 2,
+    animationFps: 12,
+    backgroundColor: '0x1099bb',
+    outerInSprites: 1
+};
+
 export const spriteFilters = {
     "flip": (sprite, params) => {
         if (params & 1) {
@@ -102,7 +113,8 @@ export const transitions = {
     }
 };
 
-export default function pixoterm(config, PIXI, $) {
+export default function pixoterm(cfg, PIXI, $) {
+    const config = Object.assign({}, configDefaults, cfg);
 
     const result = $.Deferred();
     $.getJSON(config.spriteComposition).done((spriteComposition) => {
@@ -143,9 +155,10 @@ export default function pixoterm(config, PIXI, $) {
                     app.stage.removeChildren();
 
                     const byZ = {};
-                    for (let i = -config.outerInSprites; i <= config.screenHeightInSprites; i++) {
-                        for (let j = -config.outerInSprites; j <= config.screenWidthInSprites; j++) {
-                            map[i + config.outerInSprites][j + config.outerInSprites].forEach((entry) => {
+                    const os = config.outerInSprites;
+                    for (let i = -os; i < config.screenHeightInSprites + os; i++) {
+                        for (let j = -os; j < config.screenWidthInSprites + os; j++) {
+                            map[i + os][j + os].forEach((entry) => {
                                 const z = entry != null ?
                                     entry.zIndex != null ? entry.zIndex : spriteComposition[entry.sprite].zIndex :
                                     Number.MAX_VALUE;

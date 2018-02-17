@@ -1,0 +1,5 @@
+[
+    [[{"sprite": "sand_0"}, {"sprite": "stone_single"}], [{"sprite": "sand_1"}, {"sprite": "stone_multiple"}], [{"sprite": "sand_0"}]],
+    [[{"sprite": "sand_2"}, {"sprite": "cactus_tall"}], [{"sprite": "sand_3"}, {"sprite": "grass_single"}, {"sprite": "bant_idle_down"}], [{"sprite": "sand_2"}, {"sprite": "grass_multiple"}]],
+    [[{"sprite": "sand_0"}, {"sprite": "cactus_round"}], [{"sprite": "sand_1"}, {"sprite": "sign"}], [{"sprite": "sand_0"}]]
+]

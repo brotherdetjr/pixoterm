@@ -143,7 +143,31 @@ It has the following params:
 
 In [the given example](https://brotherdetjr-time.firebaseapp.com/tutorial02.html) the girl will move to the left for 32 px in 16 two-pixel steps. Since the frame rate in the example is set to the default value of 12 FPS, the girl will move to the left cell in 16/12 = 1,333 seconds. Right to the cactus, ouch!
 
+You can apply multiple transitions to a sprite. This is useful for the scenes, when your character for example is moving up, and some other character (say, NPC) in moving down. In this case you have to apply two "*move down*" transitions to the NPC. One because the whole scene "moves" down, when the character, fixed to the center, goes up. Another one because the NPC itself goes down.
+
+At first transitions from sprite composition JSON are applied.
+
 In addition, you can apply filters not only to sprites in composition JSON, but also to sprites in a map, the same way as we did it for transitions.
+
+### Step 3: Configuration in Detail
+
+TODO (especially on outerInSprites)
+
+### Step 4: Custom Transitions and Filters
+
+TODO
+
+### Step 5: Handling User Input
+
+TODO
+
+## Dynamic Scaling
+
+An object resolved in Deferred returned by *pixoterm(...)* function contains one more property: *scale*. You can dynamically rescale your game screen, not only upon the initialization.
+
+Multiple Terms on One Page
+
+Yes, they are supported. Moreover, they can have different texture packs, but if they have the same ones, no extra networking happens &mdash; the assets are taken from PIXI's texture cache.
 
 ## A Word on Data
 

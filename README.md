@@ -151,7 +151,27 @@ In addition, you can apply filters not only to sprites in composition JSON, but 
 
 ### Step 3: Configuration in Detail
 
-TODO (especially on outerInSprites)
+The only mandatory properties of configuration object passed to *pixoterm()* function are *spritePack* and *spriteComposition*. I described them in Step 1 of this tutorial. All the rest properties have their default values. They are exported by *pixoterm.js* module as *configDefaults* object.
+
+```javascript
+export const configDefaults = {
+    spriteWidthPx: 32,
+    spriteHeightPx: 32,
+    screenWidthInSprites: 5,
+    screenHeightInSprites: 5,
+    scale: 2,
+    animationFps: 12,
+    backgroundColor: '0x1099bb',
+    outerInSprites: 1
+};
+```
+
+- *screenWidthInSprites* and *screenHeightInSprites* have been discussed above.
+- *spriteWidthPx* and *spriteHeightPx* are obvious.
+- *scale* shows how much the terminal should be scaled, because unscaled pixel art normally appears tiny on modern screens. You can compute terminal width by formula *screenWidthInSprites * spriteWidthPx * scale*. Similarly you can compute terminal height.
+- *animationFps* is a speed of animation specified in sprite composition JSON and/or in the map. More generally it is applied to any transition (see below).
+- *backgroundColor* is an RGB value of the background color of the terminal. You can see it when no sprites are drawn. The value should be '*0xRRGGBB*'-formatted String.
+- *outerInSprites* is a handy trick for scrolling effect. Assume you have your character fixed in the center of the screen, and he/she is moving *one cell* up. In this case you will need to render one extra row of sprites coming from above. The first frame of your animation won't show any pixels of this row, but then it will be sliding into a visible part of your game screen "pushing out" the lower row. Thus *(screenHeightInSprites + 1)* rows will be shown during the main part of your animation. You can achieve this by different approaches, but the most simple one is to have a "border" of extra sprites around the visible part of game screen. When you need to scroll the screen down (remember? you character is moving up), you just apply *move down* transition to every sprite on the map except your character. The default value of *outerInSprites* is 1, but you can set it to any other value, if your transitions assume moving farther than one sprite.
 
 ### Step 4: Custom Transitions and Filters
 

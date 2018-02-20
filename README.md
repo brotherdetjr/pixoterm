@@ -185,7 +185,7 @@ TODO
 
 An object resolved in Deferred returned by *pixoterm(...)* function contains one more property: *scale*. You can dynamically rescale your game screen, not only upon the initialization.
 
-Multiple Terms on One Page
+## Multiple Terminals on One Page
 
 Yes, they are supported. Moreover, they can have different texture packs, but if they have the same ones, no extra networking happens &mdash; the assets are taken from PIXI's texture cache.
 

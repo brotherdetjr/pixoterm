@@ -5,14 +5,14 @@ pixoterm(
         screenWidthInSprites: 3,
         screenHeightInSprites: 3,
         spritePack: 'sprites.json',
-        spriteComposition: 'composition.json',
-        onMouseWheel: (delta) => console.log('onMouseWheel: ' + delta),
-        onSwipe: (event) => console.log('onSwipe: ' + event.direction),
-        onPointerTap: (event) => console.log('onPointerTap: ' + event.row + " / " + event.column),
-        onPointerDoubleTap: (event) => console.log('onPointerDoubleTap: ' + event.row + " / " + event.column)
+        spriteComposition: 'composition.json'
     },
-    PIXI, $, Hammer
+    PIXI, $
 ).done((term) => {
+    term.view.addEventListener(
+        'gridpointertap',
+        (event) => console.log(event.detail.row + " / " + event.detail.column)
+    );
     document.body.appendChild(term.view);
     $.getJSON('map_animation.json', (maps) => {
         let i = 0;
@@ -33,7 +33,7 @@ pixoterm(
         spritePack: 'sprites2.json',
         spriteComposition: 'composition.json'
     },
-    PIXI, $, Hammer
+    PIXI, $
 ).done((term) => {
     document.body.appendChild(term.view);
     $.getJSON('map_animation.json', (maps) => {

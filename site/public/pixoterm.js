@@ -51,13 +51,7 @@ export const configDefaults = {
     scale: 2,
     animationFps: 12,
     backgroundColor: '0x1099bb',
-    outerInSprites: 1,
-    doubleTapIntervalMillis: 500,
-    onPinch: (event) => {},
-    onSwipe: (event) => {},
-    onMouseWheel: (event) => {},
-    onPointerTap: (event) => {},
-    onPointerDoubleTap: (event) => {}
+    outerInSprites: 1
 };
 
 export const spriteFilters = {
@@ -133,43 +127,22 @@ export default function pixoterm(cfg, PIXI, $, Hammer) {
         app.stage.scale.x = config.scale;
         app.stage.scale.y = config.scale;
 
-        if (Hammer != null) {
-            const mc = new Hammer.Manager(app.view, {
-                recognizers: [
-                    [Hammer.Pinch, {enable: true}],
-                    [Hammer.Swipe]
-                ]
-            });
-            mc.on('pinch', config.onPinch);
-            mc.on('swipe', config.onSwipe);
-        }
-
-        const onMouseWheel = (event) => {
-            var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
-            config.onMouseWheel(delta);
-            return false;
-        };
-        app.view.addEventListener("mousewheel", onMouseWheel, false);
-        app.view.addEventListener("DOMMouseScroll", onMouseWheel, false);
-
         app.stage.interactive = true;
-        let lastTapMillisEpoch = 0;
-        let lastCoords;
         app.stage.on('pointertap', (event) => {
             const g = event.data.global;
             const s = app.stage.scale;
             const row = Math.trunc(g.y / (config.spriteHeightPx * s.y));
             const column = Math.trunc(g.x / (config.spriteWidthPx * s.x));
-            const coords = {row: row, column: column};
-            const now = new Date().getTime();
-            if (now - lastTapMillisEpoch <= config.doubleTapIntervalMillis &&
-                coords.row == lastCoords.row && coords.column == lastCoords.column) {
-                config.onPointerDoubleTap(coords);
-            } else {
-                config.onPointerTap(coords);
-            }
-            lastTapMillisEpoch = now;
-            lastCoords = coords;
+            app.view.dispatchEvent(
+                new CustomEvent(
+                    'gridpointertap',
+                    {
+                        detail: {row: row, column: column},
+                        bubbles: false,
+                        cancelable: true
+                    }
+                )
+            );
         });
 
         $(app.view)

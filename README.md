@@ -41,9 +41,9 @@ pixoterm(
     },
     PIXI, // (6a)
     $ // (6b)
-).done((term) => { // (7)
+).done(term => { // (7)
     document.body.appendChild(term.view); // (8)
-    $.getJSON('tutorial01.json', (map) => term.render(map)); // (9)
+    $.getJSON('tutorial01.json', map => term.render(map)); // (9)
 });
 ```
 

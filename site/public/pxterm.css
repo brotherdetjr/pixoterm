@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/css?family=Rubik);
+
+html {
+    height: 100%;
+}
+
+body {
+    text-align: center;
+    height: 80%;
+    width: 100%;
+    display: table;
+    background-color: ghostwhite;
+}
+
+h3 a,
+h3 a:active,
+h3 a:hover,
+h3 a:focus,
+h3 a:focus-within {
+    color: black;
+    font-family: Rubik;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: black;
+    width: 200px;
+}
+
+#favicon {
+    width: 32px;
+    height: 32px;
+}
+
+#wrapper {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#created {
+    position: relative;
+    top: -1.5rem;
+}

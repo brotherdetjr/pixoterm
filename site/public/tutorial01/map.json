@@ -1,0 +1,108 @@
+{
+    "screenHeightInSprites": 3,
+    "screenWidthInSprites": 3,
+    "cellEntries": [
+        {
+            "row": 0,
+            "column": 0,
+            "zIndex": 0,
+            "sprite": "sand_0"
+        },
+        {
+            "row": 0,
+            "column": 0,
+            "zIndex": 1,
+            "sprite": "stone_single"
+        },
+        {
+            "row": 0,
+            "column": 1,
+            "zIndex": 0,
+            "sprite": "sand_1"
+        },
+        {
+            "row": 0,
+            "column": 1,
+            "zIndex": 1,
+            "sprite": "stone_multiple"
+        },
+        {
+            "row": 0,
+            "column": 2,
+            "zIndex": 0,
+            "sprite": "sand_0"
+        },
+        {
+            "row": 1,
+            "column": 0,
+            "zIndex": 0,
+            "sprite": "sand_2"
+        },
+        {
+            "row": 1,
+            "column": 0,
+            "zIndex": 1,
+            "sprite": "cactus_tall"
+        },
+        {
+            "row": 1,
+            "column": 1,
+            "zIndex": 0,
+            "sprite": "sand_3"
+        },
+        {
+            "row": 1,
+            "column": 1,
+            "zIndex": 1,
+            "sprite": "grass_single"
+        },
+        {
+            "row": 1,
+            "column": 1,
+            "zIndex": 2,
+            "sprite": "bant_idle_down"
+        },
+        {
+            "row": 1,
+            "column": 2,
+            "zIndex": 0,
+            "sprite": "sand_2"
+        },
+        {
+            "row": 1,
+            "column": 2,
+            "zIndex": 0,
+            "sprite": "grass_multiple"
+        },
+        {
+            "row": 2,
+            "column": 0,
+            "zIndex": 0,
+            "sprite": "sand_0"
+        },
+        {
+            "row": 2,
+            "column": 0,
+            "zIndex": 1,
+            "sprite": "cactus_round"
+        },
+        {
+            "row": 2,
+            "column": 1,
+            "zIndex": 0,
+            "sprite": "sand_1"
+        },
+        {
+            "row": 2,
+            "column": 1,
+            "zIndex": 1,
+            "sprite": "sign"
+        },
+        {
+            "row": 2,
+            "column": 2,
+            "zIndex": 0,
+            "sprite": "sand_0"
+        }
+    ]
+}

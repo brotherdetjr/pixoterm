@@ -25,33 +25,30 @@ const createSprite = (sp, textures) => {
         new PIXI.extras.AnimatedSprite(sp.frames.map((name) => textures[name]));
 };
 
-const placeSprite = (sprite, entryWithCoords, config) => {
+const placeSprite = (sprite, entry, config) => {
     sprite.width = config.spriteWidthPx;
     sprite.height = config.spriteHeightPx;
-    sprite.x = entryWithCoords.j * config.spriteWidthPx;
-    sprite.y = entryWithCoords.i * config.spriteHeightPx;
+    sprite.x = entry.column * config.spriteWidthPx;
+    sprite.y = entry.row * config.spriteHeightPx;
 };
 
-const renderSprite = (entryWithCoords, sp, config, transitionStates, textures) => {
+const renderSprite = (entry, sp, config, transitionStates, textures) => {
     let sprite = createSprite(sp, textures);
     sprite.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
     createTransitions(sprite, sp.transitions, transitionStates);
-    createTransitions(sprite, entryWithCoords.entry.transitions, transitionStates);
-    placeSprite(sprite, entryWithCoords, config);
+    createTransitions(sprite, entry.transitions, transitionStates);
+    placeSprite(sprite, entry, config);
     applyFilters(sprite, sp.filters);
-    applyFilters(sprite, entryWithCoords.entry.filters);
+    applyFilters(sprite, entry.filters);
     return sprite;
 };
 
 export const configDefaults = {
     spriteWidthPx: 32,
     spriteHeightPx: 32,
-    screenWidthInSprites: 5,
-    screenHeightInSprites: 5,
     scale: 2,
     animationFps: 12,
-    backgroundColor: '0x1099bb',
-    outerInSprites: 1
+    backgroundColor: '0x1099bb'
 };
 
 export const spriteFilters = {
@@ -82,7 +79,9 @@ export const transitions = {
     "animate": {
         "constructor": (sprite, params) => {
             sprite.gotoAndStop(params.sequence[0]);
-            return {pos: 0};
+            const obj = new Object();
+            obj.pos = 0;
+            return obj;
         },
         "mutator": (sprite, params, state) => {
             sprite.gotoAndStop(params.sequence[state.pos++]);
@@ -93,8 +92,10 @@ export const transitions = {
         }
     },
     "move": {
-        "constructor": (sprtie, params) => {
-            return {pos: 0};
+        "constructor": (sprite, params) => {
+            const obj = new Object();
+            obj.pos = 0;
+            return obj;
         },
         "mutator": (sprite, params, state) => {
             const step = Math.min(params.stepPx, params.distancePx - state.pos);
@@ -113,17 +114,13 @@ export const transitions = {
     }
 };
 
-export default function pixoterm(cfg, PIXI, $, Hammer) {
+export default function pxterm(cfg, PIXI, $, Hammer) {
     const config = Object.assign({}, configDefaults, cfg);
 
     const result = $.Deferred();
     $.getJSON(config.spriteComposition).done((spriteComposition) => {
         let transitionStates;
-        const app = new PIXI.Application(
-            config.spriteWidthPx * config.screenWidthInSprites * config.scale,
-            config.spriteHeightPx * config.screenHeightInSprites * config.scale,
-            {backgroundColor : parseInt(config.backgroundColor)}
-        );
+        const app = new PIXI.Application(0, 0, {backgroundColor : parseInt(config.backgroundColor)});
         app.stage.scale.x = config.scale;
         app.stage.scale.y = config.scale;
 
@@ -166,54 +163,58 @@ export default function pixoterm(cfg, PIXI, $, Hammer) {
                 );
             });
 
-            result.resolve({
-                view: app.view,
-                render: (map) => {
-                    transitionStates = [];
-                    app.stage.removeChildren();
+            const obj = { view: app.view };
 
-                    const byZ = {};
-                    const os = config.outerInSprites;
-                    for (let i = -os; i < config.screenHeightInSprites + os; i++) {
-                        for (let j = -os; j < config.screenWidthInSprites + os; j++) {
-                            map[i + os][j + os].forEach((entry) => {
-                                const z = entry != null ?
-                                    entry.zIndex != null ? entry.zIndex : spriteComposition[entry.sprite].zIndex :
-                                    Number.MAX_VALUE;
-                                if (byZ[z] == null) {
-                                    byZ[z] = [];
-                                }
-                                byZ[z].push({entry: entry, i: i, j: j});
-                            });
-                        }
-                    }
-
-                    for (let z in byZ) {
-                        byZ[z].forEach((entryWithCoords) =>
-                            app.stage.addChild(
-                                renderSprite(
-                                    entryWithCoords,
-                                    spriteComposition[entryWithCoords.entry.sprite],
-                                    config,
-                                    transitionStates,
-                                    resources[config.spritePack].textures
-                                )
-                            )
-                        );
-                    }
-                },
-                set scale(value) {
+            Object.defineProperty(obj, 'scale', {
+                get: () => app.stage.scale.x,
+                set: (value) => {
                     app.stage.scale.x = value;
                     app.stage.scale.y = value;
                     app.renderer.resize(
-                        config.spriteWidthPx * config.screenWidthInSprites * value,
-                        config.spriteHeightPx * config.screenHeightInSprites * value
+                        config.spriteWidthPx * obj.screenWidthInSprites * value,
+                        config.spriteHeightPx * obj.screenHeightInSprites * value
                     );
-                },
-                get scale() {
-                    return app.stage.scale.x;
                 }
             });
+
+            obj.render = (perception) => {
+                 transitionStates = [];
+                 app.stage.removeChildren();
+
+                 const byZ = {};
+                 perception.cellEntries.forEach((entry) => {
+                     const z = entry != null ?
+                         entry.zIndex != null ? entry.zIndex : spriteComposition[entry.sprite].zIndex :
+                         Number.MAX_VALUE;
+                     if (byZ[z] == null) {
+                         byZ[z] = [];
+                     }
+                     byZ[z].push(entry);
+                 });
+
+                 obj.screenHeightInSprites = perception.screenHeightInSprites;
+                 obj.screenWidthInSprites = perception.screenWidthInSprites;
+                 app.renderer.resize(
+                     config.spriteWidthPx * obj.screenWidthInSprites * obj.scale,
+                     config.spriteHeightPx * obj.screenHeightInSprites * obj.scale
+                 );
+
+                 for (let z in byZ) {
+                     byZ[z].forEach((entry) =>
+                         app.stage.addChild(
+                             renderSprite(
+                                 entry,
+                                 spriteComposition[entry.sprite],
+                                 config,
+                                 transitionStates,
+                                 resources[config.spritePack].textures
+                             )
+                         )
+                     );
+                 }
+            };
+
+            result.resolve(obj);
         });
 
     });

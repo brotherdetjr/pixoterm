@@ -91,7 +91,7 @@ The real map JSON for this tutorial lesson can be found [here](https://github.co
 
 The map is JSON object with dimension properties (`screenWidthInSprites`, `screenHeightInSprites`) and `cellEntries` property, which is array of "cell entry" objects.
 
-Every cell entry object  `sprite` property, which references to a sprite description in sprite composition JSON ([composition.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/composition.json) in our case). In this file you can find references to `sand_...` sprites which are apparently pictures of ground, and other different items: `stone_single`, `cactus_tall`, `cactus_round`, ...
+Every cell entry has `sprite` property, which references to a sprite description in sprite composition JSON ([composition.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/composition.json) in our case). In this file you can find references to `sand_...` sprites which are apparently pictures of ground, and other different items: `stone_single`, `cactus_tall`, `cactus_round`, ...
 
 `row`, `column` are indices of the map grid.
 

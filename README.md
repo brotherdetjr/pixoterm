@@ -22,7 +22,7 @@ The data appear more important here. What pxterm does is just taking the data fr
 
 ## Tutorial
 
-Complete tutorial project can be found [at GitHub](https://github.com/brotherdetjr/pxterm/blob/master/site/public/).
+Complete tutorial project can be found on [GitHub](https://github.com/brotherdetjr/pxterm/blob/master/site/public/).
 
 ### Step 1
 

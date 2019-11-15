@@ -1,14 +1,14 @@
-# pixoterm
+# pxterm
 
 Minimalistic HTML5/ES6 terminal for multiplayer top-down pixel art games.
 
-[Live demo](https://brotherdetjr-time.firebaseapp.com). Sprites are taken from [here](https://wrlck.itch.io/simple-desert) and [here](https://wildrandomness23.deviantart.com/art/PSVX-4G-Charset3-214615699). Thanks to the authors.
+[Live demo](https://pxterm.web.app/). Sprites are taken from [here](https://wrlck.itch.io/simple-desert) and [here](https://wildrandomness23.deviantart.com/art/PSVX-4G-Charset3-214615699). Thanks to the authors.
 
-## WTF is top-down pixel art?
+## What is top-down pixel art?
 
 Top-down pixel art is a common way of drawing old-school games. Early [Zelda](https://en.wikipedia.org/wiki/The_Legend_of_Zelda) and [GTA](https://en.wikipedia.org/wiki/Grand_Theft_Auto) are an example.
 
-## WTF is "terminal for multiplayer games"???
+## What is "terminal for multiplayer games"???
 
 If your goal is to develop browser-based multiplayer pixel art game, you need browser to draw some sprites.
 
@@ -16,68 +16,90 @@ You can use different [cool game engines](https://phaser.io/). They are feature 
 
 On the opposite end you have [MUD](https://en.wikipedia.org/wiki/Text-based_game#MUD), where you don't need any graphics, but normally simple text markup, which can be shown in some [text terminal](https://en.wikipedia.org/wiki/Computer_terminal#Text_terminals).
 
-**pixoterm** terminal concept allows to draw much richer graphics then in a text terminal, but with similar approach. All the the sprites are preloaded (like fonts in text terminals), then some data (JSON or whatever) come from server (like text, position and color data in text terminals).
+**pxterm** terminal concept allows to draw much richer graphics then in a text terminal, but with similar approach. All the the sprites are preloaded (like fonts in text terminals), then some data (JSON and what not) comes from server (like text, position and color data in text terminals).
 
-The data appear more important here. What pixoterm does is just taking the data from server and visualizing it according to simple rules and preloaded sprites.
+The data appear more important here. What pxterm does is just taking the data from server and visualizing it according to simple rules and preloaded sprites.
 
 ## Tutorial
 
-Complete tutorial project can be found [at GitHub](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/).
+Complete tutorial project can be found [at GitHub](https://github.com/brotherdetjr/pxterm/blob/master/site/public/).
 
 ### Step 1
 
-The live demo of Step 1 can be found [here](https://brotherdetjr-time.firebaseapp.com/tutorial01.html).
+The live demo of Step 1 can be found [here](https://pxterm.web.app/tutorial01/).
 
 ```javascript
-import pixoterm from './pixoterm.js' // (1)
+import pxterm from '/pxterm.js' // (1)
 
-pixoterm(
+pxterm(
     {
         screenWidthInSprites: 3, // (2a)
         screenHeightInSprites: 3, // (2b)
-        spritePack: 'sprites.json', // (3)
-        spriteComposition: 'composition.json', // (4)
+        spritePack: '/sprites.json', // (3)
+        spriteComposition: '/composition.json', // (4)
         outerInSprites: 0 // (5)
     },
     PIXI, // (6a)
     $ // (6b)
 ).done(term => { // (7)
-    document.body.appendChild(term.view); // (8)
+    $('#container').append(term.view); // (8)
     $.getJSON('tutorial01.json', map => term.render(map)); // (9)
 });
 ```
 
-- First me need to import pixoterm.js **(1)**. The module gives you *pixoterm* function, you need to pass some args to it.
-- Your game screen will be the grid of given dimensions **(2a,b)**.
-- Sprite resources are described in *sprites.json* **(3)**. This is standard [PixiJS](http://www.pixijs.com/) texture pack format, can be easily produced with [TexturePacker](http://www.codeandweb.com/texturepacker).
-- Texture pack lacks some information, that is necessary when rendering a game screen, e.g. z-order and animation. So we need to have one more file *composition.json* **(4)**. Its format will be described later.
-- Let's skip outerInSprites option **(5)** for now.
-- pixoterm uses [PixiJS](http://www.pixijs.com/) along with [jQuery](https://jquery.com/) as rendering engine. Just inject *PIXI* and *$* (jQuery) instances **(6a,b)**.
-- *pixoterm* function returns jQuery [Deferred object](https://api.jquery.com/category/deferred-object/) **(7)**.
-- When resolved, it contains an object, which has *view* property **(8)** &mdash; an instance of [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement), which you need to add to you HTML page.
-- Also it has *render* method **(9)**, which you call passing an instance of map to render.
+- First we need to import [pxterm.js](https://github.com/brotherdetjr/pxterm/blob/master/lib/pxterm.js) **(1)**. The module gives you `pxterm` function, and you need to pass some arguments to it.
+- Your game screen is going to be the grid of given dimensions **(2a,b)**.
+- Sprite resources are described in [sprites.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/sprites.json) **(3)**. This is standard [PixiJS](http://www.pixijs.com/) texture pack format, can be easily produced with [TexturePacker](http://www.codeandweb.com/texturepacker).
+- Texture pack lacks some information, which is necessary when rendering a game screen, e.g. z-order of objects and animation. So we need to have one more file &mdash; `composition.json` **(4)**. We will discuss its format later.
+- Let's skip `outerInSprites` option **(5)** for now.
+- pxterm uses [PixiJS](http://www.pixijs.com/) along with [jQuery](https://jquery.com/) as rendering engine. Just inject *PIXI* and *$* (jQuery) instances **(6a,b)**.
+- `pxterm` function returns jQuery [Deferred object](https://api.jquery.com/category/deferred-object/) **(7)**.
+- When resolved, it contains an object, which has `view` property **(8)** &mdash; an instance of [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement), which you need to append to your HTML page.
+- And last but least, it has `render` method **(9)**, which you call passing an instance of map to render.
 
-> I use [ES6 syntax](http://es6-features.org), which does not work in some browsers (e.g. in Firefox you need to switch ES6 support on manually). I don't care. I might convert it to older JS later, but I'm sure, they will support ES6 soon.
-
-What map JSON looks like?
+What does map JSON look like?
 
 ```json
-[
-    [[{"sprite": "sand_0"}, {"sprite": "stone_single"}], [...], ...],
-    [[{"sprite": "sand_2"}, {"sprite": "cactus_tall"}], [...], ...],
-    [[{"sprite": "sand_0"}, {"sprite": "cactus_round"}], [...], ...]
-]
+{
+    "screenHeightInSprites": 3,
+    "screenWidthInSprites": 3,
+    "cellEntries": [
+        {
+            "row": 0,
+            "column": 0,
+            "zIndex": 0,
+            "sprite": "sand_0"
+        },
+        {
+            "row": 0,
+            "column": 0,
+            "zIndex": 1,
+            "sprite": "stone_single"
+        },
+        ...
+        {
+            "row": 2,
+            "column": 2,
+            "zIndex": 0,
+            "sprite": "sand_0"
+        }
+    ]
+}
 ```
 
-The real map JSON can be seen [here](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/tutorial01.json).
+The real map JSON for this tutorial lesson can be found [here](https://github.com/brotherdetjr/pxterm/blob/master/site/public/tutorial01/map.json).
 
-The map is JSON array of arrays of arrays of some objects. Tricky, isn't it? What did you expect? Two dimensions go for your 2D map. Every cell of your map can contain a number of objects, that's why we have one more dimension.
+The map is JSON object with dimension properties (`screenWidthInSprites`, `screenHeightInSprites`) and `cellEntries` property, which is array of "cell entry" objects.
 
-Every object in the map contains *sprite* property, which references to a sprite description in sprite composition JSON ([composition.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/composition.json) in our case). You see "*sand_...*" sprites which are obviously pictures of ground and different items on it: *cactus_tall*, *cactus_round*, *stone_single*...
+Every cell entry object  `sprite` property, which references to a sprite description in sprite composition JSON ([composition.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/composition.json) in our case). In this file you can find references to `sand_...` sprites which are apparently pictures of ground, and other different items: `stone_single`, `cactus_tall`, `cactus_round`, ...
 
-You might even notice that some sprite (*bant_idle_down*) is animated &mdash; it's a girl with a red bow standing still, but breathing heavily like a typical pixel art character.
+`row`, `column` are indices of the map grid.
 
-Let's take a look at [composition.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/composition.json):
+`zIndex` can be any number (including negatives and floating point). Every map cell can contain a number of objects, and you need to specify the order of drawing. It's a good idea to mark a ground sprite with `zIndex` equal to zero. The "topmost" object has the greatest `zIndex` value amongst cell's objects.
+
+You might even notice that some sprite (`bant_idle_down`) is animated &mdash; it's a girl with a red bow standing still, but breathing heavily like a typical pixel art character.
+
+Let's have a look at [composition.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/composition.json):
 
 ```json
 {
@@ -100,12 +122,12 @@ Let's take a look at [composition.json](https://github.com/brotherdetjr/pixoterm
 }
 ```
 
-This is an object, which keys are the names of the sprites. "*sand_0*" value is quite simple:
+This is an object, whose properties have the same names as the sprites from [sprites.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/sprites.json) do. `sand_0` value is quite simple:
 
-- *frames* contains an array of sprite names from texture pack ([sprites.json](https://github.com/brotherdetjr/pixoterm/blob/master/site/public/sprites.json) in our case). Yes, we have double indirection here. Since this piece of ground is not animated, the array contains single element.
-- *zIndex* determines an order in which sprites of a given cell will be drawn. Sprites with bigger zIndex are drawn atop the sprites with lesser one.
-- "*bant_idle_down*" has some animation, see "*frames*" array, but nothing would be moving, unless we added "*animate*" transition to "*transitions*" array. "*sequence*" specifies the sequence of frames in animation. Every number refers to element in "*frames*" array.
-- If "*loopFrom*" property is specified, the animation is looped starting with *loopFrom*th frame of "*sequence*". Here we have looped 8x2 frames of breathing. We don't want our little girl to suffocate.
+- `frames` contains an array of sprite names from texture pack ([sprites.json](https://github.com/brotherdetjr/pxterm/blob/master/site/public/sprites.json) in our case). Yes, we have double indirection here. Since this piece of ground is not animated, the array contains single element.
+- `zIndex` determines an order in which sprites of a given cell will be drawn. Sprites with bigger zIndex are drawn atop the sprites with lesser one.
+- `bant_idle_down` has some animation, see `frames` array, but nothing would be moving, unless we added `animate` *transition* to `transitions` array. `sequence` specifies the sequence of frames in animation. Every number refers to element in `frames` array.
+- If `loopFrom` property is specified, the animation is looped starting with `loopFrom`th frame of `sequence`. Here we have looped 8x2 frames of breathing. We don't want our little girl to suffocate.
 
 ## Step 2: Filters and More on Transitions
 
@@ -151,7 +173,7 @@ In addition, you can apply filters not only to sprites in composition JSON, but 
 
 ### Step 3: Configuration in Detail
 
-The only mandatory properties of configuration object passed to *pixoterm()* function are *spritePack* and *spriteComposition*. I described them in Step 1 of this tutorial. All the rest properties have their default values. They are exported by *pixoterm.js* module as *configDefaults* object.
+The only mandatory properties of configuration object passed to *pxterm()* function are *spritePack* and *spriteComposition*. I described them in Step 1 of this tutorial. All the rest properties have their default values. They are exported by *pxterm.js* module as *configDefaults* object.
 
 ```javascript
 export const configDefaults = {
@@ -183,7 +205,7 @@ TODO
 
 ## Dynamic Scaling
 
-An object resolved in Deferred returned by *pixoterm(...)* function contains one more property: *scale*. You can dynamically rescale your game screen, not only upon the initialization.
+An object resolved in Deferred returned by *pxterm(...)* function contains one more property: *scale*. You can dynamically rescale your game screen, not only upon the initialization.
 
 ## Multiple Terminals on One Page
 
@@ -191,10 +213,10 @@ Yes, they are supported. Moreover, they can have different texture packs, but if
 
 ## A Word on Data
 
-You could notice that all the data structures are pretty redundant. Yes, they are, but this is done for simplicity of pixoterm engine. If you are concerned with minimization of networking traffic, you should use some optimizers that will normalize the data before sending to a browser, and denormalize it at browser's side when passing to pixoterm.
+You could notice that all the data structures are pretty redundant. Yes, they are, but this is done for simplicity of pxterm engine. If you are concerned with minimization of networking traffic, you should use some optimizers that will normalize the data before sending to a browser, and denormalize it at browser's side when passing to pxterm.
 
-Also it worth using some binary formats instead of JSON ([here](http://bsonspec.org/) and [here](https://github.com/google/protobuf/tree/master/js)), but this is out of pixoterm's scope.
+Also it worth using some binary formats instead of JSON ([here](http://bsonspec.org/) and [here](https://github.com/google/protobuf/tree/master/js)), but this is out of pxterm's scope.
 
-When implementing your own pixoterm (de)serialization, you might be tempted to send not the whole screen data, but delta &mdash; the changes appeared since the previous frame. Potentially this is much more efficient.
+When implementing your own pxterm (de)serialization, you might be tempted to send not the whole screen data, but delta &mdash; the changes appeared since the previous frame. Potentially this is much more efficient.
 
 However I suggest to avoid such approach, because dealing with deltas assumes, that your client application keeps some state. It might be quite tricky to maintain the state correctly on a client. Keep your client app stateless as much as you can.
